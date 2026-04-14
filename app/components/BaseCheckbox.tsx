@@ -1,5 +1,5 @@
 import checkboxIcon from '../assets/checkbox.svg'
-import { useId } from 'react'
+import { useEffect, useId, useRef } from 'react'
 import BaseField, { type BaseFieldProps } from './BaseField'
 
 const BaseCheckbox: React.FC<{
@@ -9,12 +9,27 @@ const BaseCheckbox: React.FC<{
   onChange: (v: string[]) => void
 } & BaseFieldProps> = ({ name, label, options, value = [], onChange, required, error }) => {
   const groupId = useId()
+  const inputRefs = useRef<Array<HTMLInputElement | null>>([])
   const shouldShowError = value.length > 0 && Boolean(error)
+
+  useEffect(() => {
+    const firstInput = inputRefs.current[0]
+    if (!firstInput) {
+      return
+    }
+
+    if (required && value.length === 0) {
+      firstInput.setCustomValidity('請選擇至少一個選項。')
+      return
+    }
+
+    firstInput.setCustomValidity('')
+  }, [error, label, required, value.length])
 
   return (
     <BaseField label={label} required={required} error={shouldShowError ? error : undefined}>
       <div className="space-y-3">
-        {options.map((option) => {
+        {options.map((option, index) => {
           const optionId = `${groupId}-${option.value}`
           const checked = value.includes(option.value)
 
@@ -29,6 +44,9 @@ const BaseCheckbox: React.FC<{
                 name={name}
                 type="checkbox"
                 value={option.value}
+                ref={(element) => {
+                  inputRefs.current[index] = element
+                }}
                 checked={checked}
                 onChange={() => {
                   const next = checked ? value.filter((v) => v !== option.value) : [...value, option.value]
