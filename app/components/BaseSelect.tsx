@@ -14,7 +14,6 @@ const BaseSelect: React.FC<{
   options: SelectOption[]
   value: string
   onChange: (v: string) => void
-  invalid?: boolean
   inputPlaceholder?: string
   detailValue?: string
   onDetailChange?: (v: string) => void
@@ -28,7 +27,6 @@ const BaseSelect: React.FC<{
   options,
   value,
   onChange,
-  invalid,
   inputPlaceholder = '請填寫',
   detailValue,
   onDetailChange,
@@ -56,8 +54,8 @@ const BaseSelect: React.FC<{
   }, [])
 
   const shouldShowError = showInput
-    ? (detailValue?.trim().length ?? 0) > 0 && Boolean(invalid)
-    : selectedLabel.trim().length > 0 && Boolean(invalid)
+    ? (detailValue?.trim().length ?? 0) > 0 && Boolean(error)
+    : selectedLabel.trim().length > 0 && Boolean(error)
 
   return (
     <div ref={rootRef} className={`relative ${className ?? ''}`}>
@@ -67,7 +65,6 @@ const BaseSelect: React.FC<{
         required={required}
         hint={hint}
         error={shouldShowError ? error : undefined}
-        invalid={shouldShowError}
         value={selectedLabel}
         readOnly
         onClick={() => setIsOpen((prev) => !prev)}

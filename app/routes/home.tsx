@@ -126,7 +126,6 @@ export default function Home() {
               autoComplete="name"
               value={name}
               onChange={setName}
-              invalid={Boolean(nameError)}
               error={nameError}
             />
 
@@ -138,7 +137,6 @@ export default function Home() {
               autoComplete="email"
               value={email}
               onChange={setEmail}
-              invalid={Boolean(emailError)}
               error={emailError}
             />
 
@@ -150,7 +148,6 @@ export default function Home() {
               autoComplete="tel"
               value={phone}
               onChange={setPhone}
-              invalid={Boolean(phoneError)}
               error={phoneError}
             />
 
@@ -161,7 +158,6 @@ export default function Home() {
               autoComplete="organization"
               value={organization}
               onChange={setOrganization}
-              invalid={Boolean(organizationError)}
               error={organizationError}
             />
 
@@ -174,7 +170,6 @@ export default function Home() {
               onChange={setIndustry}
               detailValue={industryDetail}
               onDetailChange={setIndustryDetail}
-              invalid={Boolean(industryError || industryDetailError)}
               error={industryError || industryDetailError}
             />
 
