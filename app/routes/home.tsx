@@ -90,6 +90,7 @@ export default function Home() {
     industryValue !== 'other' || industryDetailValue.trim().length > 0
   const sessionsValid = sessions.length > 0
   const dinnerValid = dinnerOptions.some((option) => option.value === dinner)
+  const shouldShowFoodPreference = dinner === YesNoType.YES
   const isFoodPreferenceDetailValid =
     foodPreferenceValue !== 'other' || foodPreferenceDetailValue.trim().length > 0
 
@@ -102,8 +103,8 @@ export default function Home() {
     isIndustryDetailValid,
     sessionsValid,
     dinnerValid,
-    !foodPreferenceError,
-    isFoodPreferenceDetailValid,
+    !shouldShowFoodPreference || !foodPreferenceError,
+    !shouldShowFoodPreference || isFoodPreferenceDetailValid,
   ].every(Boolean)
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -118,11 +119,17 @@ export default function Home() {
       phone: phoneValue,
       organization: organizationValue,
       industry: industryValue,
-      industryDetail: industryDetailValue,
+      ...(industryValue === 'other' ? { industryDetail: industryDetailValue } : {}),
       sessions,
       dinner,
-      foodPreference: foodPreferenceValue,
-      foodPreferenceDetail: foodPreferenceDetailValue,
+      ...(shouldShowFoodPreference
+        ? {
+            foodPreference: foodPreferenceValue,
+            ...(foodPreferenceValue === 'other'
+              ? { foodPreferenceDetail: foodPreferenceDetailValue }
+              : {}),
+          }
+        : {}),
     }
 
     alert(`已送出報名資訊：${JSON.stringify(payload, null, 2)}`)
@@ -217,19 +224,21 @@ export default function Home() {
               error={!dinnerValid ? '是否參加晚宴 格式錯誤' : undefined}
             />
 
-            <BaseRadio
-              name="food-preference"
-              label="飲食習慣"
-              options={foodPreferenceOptions}
-              value={foodPreferenceValue}
-              onChange={(value) =>
-                setFoodPreferenceValue(value as FoodPreferenceType | 'other')
-              }
-              detailValue={foodPreferenceDetailValue}
-              onDetailChange={setFoodPreferenceDetailValue}
-              required
-              error={foodPreferenceError}
-            />
+            {shouldShowFoodPreference && (
+              <BaseRadio
+                name="food-preference"
+                label="飲食習慣"
+                options={foodPreferenceOptions}
+                value={foodPreferenceValue}
+                onChange={(value) =>
+                  setFoodPreferenceValue(value as FoodPreferenceType | 'other')
+                }
+                detailValue={foodPreferenceDetailValue}
+                onDetailChange={setFoodPreferenceDetailValue}
+                required
+                error={foodPreferenceError}
+              />
+            )}
           </div>
 
           <div className="mt-12 flex justify-center">
