@@ -9,6 +9,7 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import Favicon from "./assets/radio.svg";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -21,6 +22,11 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap",
   },
+  {
+    rel: "icon",
+    href: Favicon,
+    type: 'image/svg+xml'
+  }
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
