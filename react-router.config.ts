@@ -1,5 +1,6 @@
-import type { Config } from "@react-router/dev/config";
+import type { Config } from '@react-router/dev/config'
 
 export default {
-  ssr: false,
-} satisfies Config;
+  basename: process.env.NODE_ENV === 'production' ? '/event-form/' : '/',
+  ssr: false
+} satisfies Config
