@@ -83,7 +83,7 @@ export default function Home() {
         }}
       >
         <form className="sm:px-10 px-5 pt-14 pb-26" onSubmit={handleSubmit}>
-          <h1 className="text-[var(--color-primary)] font-semibold text-11 text-center">線上會議報名表</h1>
+          <h1 className="text-[var(--color-primary)] font-semibold text-[44px] text-center">線上會議報名表</h1>
 
           <div className="space-y-10 mt-10">
             <BaseInput
