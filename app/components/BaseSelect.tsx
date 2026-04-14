@@ -14,6 +14,7 @@ const BaseSelect: React.FC<{
   options: SelectOption[]
   value: string
   onChange: (v: string) => void
+  invalid?: boolean
   inputPlaceholder?: string
   detailValue?: string
   onDetailChange?: (v: string) => void
@@ -27,6 +28,7 @@ const BaseSelect: React.FC<{
   options,
   value,
   onChange,
+  invalid,
   inputPlaceholder = '請填寫',
   detailValue,
   onDetailChange,
@@ -53,6 +55,10 @@ const BaseSelect: React.FC<{
     }
   }, [])
 
+  const shouldShowError = showInput
+    ? (detailValue?.trim().length ?? 0) > 0 && (invalid || Boolean(error))
+    : selectedLabel.trim().length > 0 && (invalid || Boolean(error))
+
   return (
     <div ref={rootRef} className={`relative ${className ?? ''}`}>
       <BaseInput
@@ -60,7 +66,8 @@ const BaseSelect: React.FC<{
         label={label}
         required={required}
         hint={hint}
-        error={error}
+        error={shouldShowError ? error : undefined}
+        invalid={shouldShowError}
         value={selectedLabel}
         readOnly
         onClick={() => setIsOpen((prev) => !prev)}
@@ -76,7 +83,7 @@ const BaseSelect: React.FC<{
       />
 
       {isOpen && (
-        <div className="absolute left-0 top-full z-20 mt-1.5 w-full rounded-[var(--rounded)] bg-white p-2 shadow-[1px_1px_7px_#000]">
+        <div className="relative left-0 bottom-8 z-20 mt-1.5 w-full rounded-[var(--rounded)] bg-white p-2 shadow-[1px_1px_7px_#ccc]">
           {options.map((option) => {
             const isSelected = option.value === value
             return (
@@ -99,6 +106,7 @@ const BaseSelect: React.FC<{
         <input
           name={`${id}-detail`}
           type="text"
+          required={showInput}
           placeholder={inputPlaceholder}
           value={detailValue}
           onChange={(e) => onDetailChange?.(e.target.value)}

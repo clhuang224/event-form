@@ -6,11 +6,11 @@ export const useFormField = <T>(
 ): [T, React.Dispatch<React.SetStateAction<T>>, boolean] => {
   const [value, setValue] = useState(initialValue)
 
-  const inValid = validator?.(value) ?? false
+  const valid = validator?.(value) ?? false
 
   return [
     value,
     setValue,
-    inValid
+    valid
   ]
 }

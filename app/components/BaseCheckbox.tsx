@@ -7,11 +7,12 @@ const BaseCheckbox: React.FC<{
   options: Array<{ value: string; label: string }>
   value: string[]
   onChange: (v: string[]) => void
-} & BaseFieldProps> = ({ name, label, options, value = [], onChange, required }) => {
+} & BaseFieldProps> = ({ name, label, options, value = [], onChange, required, error }) => {
   const groupId = useId()
+  const shouldShowError = value.length > 0 && Boolean(error)
 
   return (
-    <BaseField label={label} required={required}>
+    <BaseField label={label} required={required} error={shouldShowError ? error : undefined}>
       <div className="space-y-3">
         {options.map((option) => {
           const optionId = `${groupId}-${option.value}`

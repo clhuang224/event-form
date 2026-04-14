@@ -21,6 +21,7 @@ const BaseRadio: React.FC<{
   label,
   options,
   required,
+  error,
   value,
   onChange,
   inputPlaceholder = '請填寫',
@@ -29,9 +30,12 @@ const BaseRadio: React.FC<{
 }) => {
   const groupId = useId()
   const showInput = options.some((option) => option.value === value && option.hasInput)
+  const shouldShowError = showInput
+    ? (detailValue?.trim().length ?? 0) > 0 && Boolean(error)
+    : value.trim().length > 0 && Boolean(error)
 
   return (
-    <BaseField label={label} required={required}>
+    <BaseField label={label} required={required} error={shouldShowError ? error : undefined}>
       <div className="flex flex-wrap gap-x-12 gap-y-4">
         {options.map((option) => {
           const optionId = `${groupId}-${option.value}`
@@ -68,6 +72,7 @@ const BaseRadio: React.FC<{
         <input
           name={`${name}-detail`}
           type="text"
+          required={showInput}
           placeholder={inputPlaceholder}
           value={detailValue}
           onChange={(e) => onDetailChange?.(e.target.value)}

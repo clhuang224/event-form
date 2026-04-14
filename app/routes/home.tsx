@@ -8,7 +8,7 @@ import footerImage from '~/assets/footer.png'
 import headerImage from '~/assets/header.png'
 import type { Route } from './+types/home'
 import { useFormField } from '~/hooks/useFormField'
-import { validateEmail, validateName, validatePhone } from '~/utils/validator'
+import { validateEmail, validateName, validatePhone, validateRequired } from '~/utils/validator'
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: '線上會議報名表' }]
@@ -41,22 +41,51 @@ const foodPreferenceOptions = [
 ]
 
 export default function Home() {
-  const [name, setName, nameInvalid] = useFormField<string>('', validateName)
-  const [email, setEmail, emailInvalid] = useFormField<string>('', validateEmail)
-  const [phone, setPhone, phoneInvalid] = useFormField<string>('', validatePhone)
-  const [organization, setOrganization] = useFormField<string>('')
+  const [name, setName, nameValid] = useFormField<string>('', validateName)
+  const [email, setEmail, emailValid] = useFormField<string>('', validateEmail)
+  const [phone, setPhone, phoneValid] = useFormField<string>('', validatePhone)
+  const [organization, setOrganization, organizationValid] = useFormField<string>('', validateRequired)
 
-  const [industry, setIndustry] = useFormField('tech')
-  const [industryDetail, setIndustryDetail] = useState<string>('')
+  const [industry, setIndustry, industryValid] = useFormField<string>(
+    'tech',
+    (value) => industryOptions.some((option) => option.value === value)
+  )
+  const [industryDetail, setIndustryDetail, industryDetailValueValid] = useFormField<string>('', validateRequired)
 
   const [sessions, setSessions] = useState<string[]>(['session-a'])
 
   const [dinner, setDinner] = useState('no')
 
-  const [foodPreference, setFoodPreference] = useFormField('other')
-  const [foodPreferenceDetail, setFoodPreferenceDetail] = useState('')
+  const [foodPreference, setFoodPreference, foodPreferenceValid] = useFormField<string>(
+    'other',
+    (value) => foodPreferenceOptions.some((option) => option.value === value)
+  )
+  const [foodPreferenceDetail, setFoodPreferenceDetail, foodPreferenceDetailValueValid] = useFormField<string>('', validateRequired)
 
-  function handleSubmit() {
+  const industryDetailValid = industry !== 'other' || industryDetailValueValid
+  const sessionsValid = sessions.length > 0
+  const dinnerValid = dinnerOptions.some((option) => option.value === dinner)
+  const foodPreferenceDetailValid = foodPreference !== 'other' || foodPreferenceDetailValueValid
+
+  const isFormValid = [
+    nameValid,
+    emailValid,
+    phoneValid,
+    organizationValid,
+    industryValid,
+    industryDetailValid,
+    sessionsValid,
+    dinnerValid,
+    foodPreferenceValid,
+    foodPreferenceDetailValid,
+  ].every(Boolean)
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (!isFormValid) {
+      return
+    }
+
     const payload = {
       name,
       email,
@@ -95,7 +124,8 @@ export default function Home() {
               autoComplete="name"
               value={name}
               onChange={setName}
-              invalid={nameInvalid}
+              invalid={!nameValid}
+              error="姓名 格式錯誤"
             />
 
             <BaseInput
@@ -106,7 +136,8 @@ export default function Home() {
               autoComplete="email"
               value={email}
               onChange={setEmail}
-              invalid={emailInvalid}
+              invalid={!emailValid}
+              error="常用信箱 格式錯誤"
             />
 
             <BaseInput
@@ -117,7 +148,8 @@ export default function Home() {
               autoComplete="tel"
               value={phone}
               onChange={setPhone}
-              invalid={phoneInvalid}
+              invalid={!phoneValid}
+              error="手機號碼 格式錯誤"
             />
 
             <BaseInput
@@ -127,6 +159,8 @@ export default function Home() {
               autoComplete="organization"
               value={organization}
               onChange={setOrganization}
+              invalid={!organizationValid}
+              error="服務單位 格式錯誤"
             />
 
             <BaseSelect
@@ -138,6 +172,8 @@ export default function Home() {
               onChange={setIndustry}
               detailValue={industryDetail}
               onDetailChange={setIndustryDetail}
+              invalid={!industryValid || !industryDetailValid}
+              error="工作產業類別 格式錯誤"
             />
 
             <BaseCheckbox
@@ -147,6 +183,7 @@ export default function Home() {
               value={sessions}
               onChange={setSessions}
               required
+              error={!sessionsValid ? '欲參與的會議場次（複選題） 格式錯誤' : undefined}
             />
 
             <BaseRadio
@@ -156,6 +193,7 @@ export default function Home() {
               value={dinner}
               onChange={setDinner}
               required
+              error={!dinnerValid ? '是否參加晚宴 格式錯誤' : undefined}
             />
 
             <BaseRadio
@@ -167,6 +205,7 @@ export default function Home() {
               detailValue={foodPreferenceDetail}
               onDetailChange={setFoodPreferenceDetail}
               required
+              error={!foodPreferenceValid || !foodPreferenceDetailValid ? '飲食習慣 格式錯誤' : undefined}
             />
           </div>
 
