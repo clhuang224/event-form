@@ -8,7 +8,7 @@ import footerImage from '~/assets/footer.png'
 import headerImage from '~/assets/header.png'
 import type { Route } from './+types/home'
 import { useFormField } from '~/hooks/useFormField'
-import { validateEmail, validateName, validateOrganization, validatePhone, validateRequired } from '~/utils/validator'
+import { validateEmail, validateName, validateOrganization, validatePhone } from '~/utils/validator'
 import { getEnumValues } from '~/utils/getEnumValues'
 import { getOptionsWithOther } from '~/utils/getOptionsWithOther'
 import { SessionType } from '~/enums/SessionType'
@@ -54,18 +54,20 @@ export default function Home() {
   const { phoneValue, setPhoneValue, phoneValid, phoneError } = useFormField<'phone', string>('phone', '', validatePhone, '手機號碼 格式錯誤')
   const { organizationValue, setOrganizationValue, organizationValid, organizationError } = useFormField<'organization', string>('organization', '', validateOrganization, '服務單位 格式錯誤')
 
-  const { industryValue, setIndustryValue, industryValid, industryError } = useFormField<'industry', IndustryType | 'other'>(
+  const {
+    industryValue,
+    setIndustryValue,
+    industryValid,
+    industryError,
+    industryDetailValue,
+    setIndustryDetailValue,
+  } = useFormField<'industry', IndustryType | 'other', true>(
     'industry',
     IndustryType.TECH,
     (value) => industryOptions.some((option) => option.value === value),
-    '工作產業類別 格式錯誤'
+    '工作產業類別 格式錯誤',
+    true
   )
-  const {
-    industryDetailValue,
-    setIndustryDetailValue,
-    industryDetailValid,
-    industryDetailError,
-  } = useFormField<'industryDetail', string>('industryDetail', '', validateRequired, '工作產業類別 格式錯誤')
 
   const [sessions, setSessions] = useState<string[]>([])
 
@@ -76,23 +78,22 @@ export default function Home() {
     setFoodPreferenceValue,
     foodPreferenceValid,
     foodPreferenceError,
-  } = useFormField<'foodPreference', FoodPreferenceType | 'other'>(
+    foodPreferenceDetailValue,
+    setFoodPreferenceDetailValue,
+  } = useFormField<'foodPreference', FoodPreferenceType | 'other', true>(
     'foodPreference',
     FoodPreferenceType.OMNIVORE,
     (value) => foodPreferenceOptions.some((option) => option.value === value),
-    '飲食習慣 格式錯誤'
+    '飲食習慣 格式錯誤',
+    true
   )
-  const {
-    foodPreferenceDetailValue,
-    setFoodPreferenceDetailValue,
-    foodPreferenceDetailValid,
-    foodPreferenceDetailError,
-  } = useFormField<'foodPreferenceDetail', string>('foodPreferenceDetail', '', validateRequired, '飲食習慣 格式錯誤')
 
-  const isIndustryDetailValid = industryValue !== 'other' || industryDetailValid
+  const isIndustryDetailValid =
+    industryValue !== 'other' || industryDetailValue.trim().length > 0
   const sessionsValid = sessions.length > 0
   const dinnerValid = dinnerOptions.some((option) => option.value === dinner)
-  const isFoodPreferenceDetailValid = foodPreferenceValue !== 'other' || foodPreferenceDetailValid
+  const isFoodPreferenceDetailValid =
+    foodPreferenceValue !== 'other' || foodPreferenceDetailValue.trim().length > 0
 
   const isFormValid = [
     nameValid,
@@ -195,7 +196,7 @@ export default function Home() {
               onChange={(value) => setIndustryValue(value as IndustryType | 'other')}
               detailValue={industryDetailValue}
               onDetailChange={setIndustryDetailValue}
-              error={industryError || industryDetailError}
+              error={industryError}
             />
 
             <BaseCheckbox
@@ -229,7 +230,7 @@ export default function Home() {
               detailValue={foodPreferenceDetailValue}
               onDetailChange={setFoodPreferenceDetailValue}
               required
-              error={foodPreferenceError || foodPreferenceDetailError}
+              error={foodPreferenceError}
             />
           </div>
 
