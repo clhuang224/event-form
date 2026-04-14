@@ -9,36 +9,44 @@ import headerImage from '~/assets/header.png'
 import type { Route } from './+types/home'
 import { useFormField } from '~/hooks/useFormField'
 import { validateEmail, validateName, validateOrganization, validatePhone, validateRequired } from '~/utils/validator'
+import { getEnumValues } from '~/utils/getEnumValues'
+import { getOptionsWithOther } from '~/utils/getOptionsWithOther'
+import { SessionType } from '~/enums/SessionType'
+import { IndustryType } from '~/enums/IndustryType'
+import { YesNoType } from '~/enums/YesNoType'
+import { FoodPreferenceType } from '~/enums/FoodPreferenceType'
+import { sessionMapName } from '~/constants/sessionMapName'
+import { industryMapName } from '~/constants/industryMapName'
+import { yesNoMapName } from '~/constants/yesNoMapName'
+import { foodPreferenceMapName } from '~/constants/foodPreferenceMapName'
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: '線上會議報名表' }]
 }
 
-const sessionOptions = [
-  { value: 'session-a', label: 'Session A' },
-  { value: 'session-b', label: 'Session B' },
-  { value: 'session-c', label: 'Session C' },
-  { value: 'session-d', label: 'Session D' },
-]
+const sessionOptions = getEnumValues(SessionType).map((session) => ({
+  value: session,
+  label: sessionMapName[session],
+}))
 
-const industryOptions = [
-  { value: 'tech', label: '科技業' },
-  { value: 'healthcare', label: '醫療產業' },
-  { value: 'finance', label: '金融業' },
-  { value: 'education', label: '教育領域' },
-  { value: 'other', label: '其他', hasInput: true },
-]
+const industryOptions = getOptionsWithOther(
+  getEnumValues(IndustryType).map((industry) => ({
+    value: industry,
+    label: industryMapName[industry],
+  }))
+)
 
-const dinnerOptions = [
-  { value: 'yes', label: '是' },
-  { value: 'no', label: '否' },
-]
+const dinnerOptions = getEnumValues(YesNoType).map((dinner) => ({
+  value: dinner,
+  label: yesNoMapName[dinner],
+}))
 
-const foodPreferenceOptions = [
-  { value: 'omnivore', label: '葷食' },
-  { value: 'vegetarian', label: '素食' },
-  { value: 'other', label: '其他（請填寫）', hasInput: true },
-]
+const foodPreferenceOptions = getOptionsWithOther(
+  getEnumValues(FoodPreferenceType).map((foodPreference) => ({
+    value: foodPreference,
+    label: foodPreferenceMapName[foodPreference],
+  }))
+)
 
 export default function Home() {
   const { nameValue, setNameValue, nameValid, nameError } = useFormField<'name', string>('name', '', validateName, '姓名 格式錯誤')
@@ -46,9 +54,9 @@ export default function Home() {
   const { phoneValue, setPhoneValue, phoneValid, phoneError } = useFormField<'phone', string>('phone', '', validatePhone, '手機號碼 格式錯誤')
   const { organizationValue, setOrganizationValue, organizationValid, organizationError } = useFormField<'organization', string>('organization', '', validateOrganization, '服務單位 格式錯誤')
 
-  const { industryValue, setIndustryValue, industryValid, industryError } = useFormField<'industry', string>(
+  const { industryValue, setIndustryValue, industryValid, industryError } = useFormField<'industry', IndustryType | 'other'>(
     'industry',
-    'tech',
+    IndustryType.TECH,
     (value) => industryOptions.some((option) => option.value === value),
     '工作產業類別 格式錯誤'
   )
@@ -61,16 +69,16 @@ export default function Home() {
 
   const [sessions, setSessions] = useState<string[]>([])
 
-  const [dinner, setDinner] = useState('yes')
+  const [dinner, setDinner] = useState<YesNoType>(YesNoType.YES)
 
   const {
     foodPreferenceValue,
     setFoodPreferenceValue,
     foodPreferenceValid,
     foodPreferenceError,
-  } = useFormField<'foodPreference', string>(
+  } = useFormField<'foodPreference', FoodPreferenceType | 'other'>(
     'foodPreference',
-    'omnivore',
+    FoodPreferenceType.OMNIVORE,
     (value) => foodPreferenceOptions.some((option) => option.value === value),
     '飲食習慣 格式錯誤'
   )
@@ -184,7 +192,7 @@ export default function Home() {
               required
               options={industryOptions}
               value={industryValue}
-              onChange={setIndustryValue}
+              onChange={(value) => setIndustryValue(value as IndustryType | 'other')}
               detailValue={industryDetailValue}
               onDetailChange={setIndustryDetailValue}
               error={industryError || industryDetailError}
@@ -205,7 +213,7 @@ export default function Home() {
               label="是否參加晚宴"
               options={dinnerOptions}
               value={dinner}
-              onChange={setDinner}
+              onChange={(value) => setDinner(value as YesNoType)}
               required
               error={!dinnerValid ? '是否參加晚宴 格式錯誤' : undefined}
             />
@@ -215,7 +223,9 @@ export default function Home() {
               label="飲食習慣"
               options={foodPreferenceOptions}
               value={foodPreferenceValue}
-              onChange={setFoodPreferenceValue}
+              onChange={(value) =>
+                setFoodPreferenceValue(value as FoodPreferenceType | 'other')
+              }
               detailValue={foodPreferenceDetailValue}
               onDetailChange={setFoodPreferenceDetailValue}
               required
