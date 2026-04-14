@@ -3,7 +3,7 @@ import buttonImage from '../assets/button.png'
 
 const SubmitButton: React.FC = () => {
   return (
-    <button type="submit" className="relative w-[292px] h-[78px]">
+    <button type="submit" className="relative w-[292px] h-[78px] cursor-pointer">
       <img
         src={buttonImage}
         alt=""
