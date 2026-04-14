@@ -41,33 +41,50 @@ const foodPreferenceOptions = [
 ]
 
 export default function Home() {
-  const [name, setName, nameValid, nameError] = useFormField<string>('', validateName, '姓名 格式錯誤')
-  const [email, setEmail, emailValid, emailError] = useFormField<string>('', validateEmail, '常用信箱 格式錯誤')
-  const [phone, setPhone, phoneValid, phoneError] = useFormField<string>('', validatePhone, '手機號碼 格式錯誤')
-  const [organization, setOrganization, organizationValid, organizationError] = useFormField<string>('', validateOrganization, '服務單位 格式錯誤')
+  const { nameValue, setNameValue, nameValid, nameError } = useFormField<'name', string>('name', '', validateName, '姓名 格式錯誤')
+  const { emailValue, setEmailValue, emailValid, emailError } = useFormField<'email', string>('email', '', validateEmail, '常用信箱 格式錯誤')
+  const { phoneValue, setPhoneValue, phoneValid, phoneError } = useFormField<'phone', string>('phone', '', validatePhone, '手機號碼 格式錯誤')
+  const { organizationValue, setOrganizationValue, organizationValid, organizationError } = useFormField<'organization', string>('organization', '', validateOrganization, '服務單位 格式錯誤')
 
-  const [industry, setIndustry, industryValid, industryError] = useFormField<string>(
+  const { industryValue, setIndustryValue, industryValid, industryError } = useFormField<'industry', string>(
+    'industry',
     'tech',
     (value) => industryOptions.some((option) => option.value === value),
     '工作產業類別 格式錯誤'
   )
-  const [industryDetail, setIndustryDetail, industryDetailValueValid, industryDetailError] = useFormField<string>('', validateRequired, '工作產業類別 格式錯誤')
+  const {
+    industryDetailValue,
+    setIndustryDetailValue,
+    industryDetailValid,
+    industryDetailError,
+  } = useFormField<'industryDetail', string>('industryDetail', '', validateRequired, '工作產業類別 格式錯誤')
 
   const [sessions, setSessions] = useState<string[]>([])
 
   const [dinner, setDinner] = useState('yes')
 
-  const [foodPreference, setFoodPreference, foodPreferenceValid, foodPreferenceError] = useFormField<string>(
+  const {
+    foodPreferenceValue,
+    setFoodPreferenceValue,
+    foodPreferenceValid,
+    foodPreferenceError,
+  } = useFormField<'foodPreference', string>(
+    'foodPreference',
     'omnivore',
     (value) => foodPreferenceOptions.some((option) => option.value === value),
     '飲食習慣 格式錯誤'
   )
-  const [foodPreferenceDetail, setFoodPreferenceDetail, foodPreferenceDetailValueValid, foodPreferenceDetailError] = useFormField<string>('', validateRequired, '飲食習慣 格式錯誤')
+  const {
+    foodPreferenceDetailValue,
+    setFoodPreferenceDetailValue,
+    foodPreferenceDetailValid,
+    foodPreferenceDetailError,
+  } = useFormField<'foodPreferenceDetail', string>('foodPreferenceDetail', '', validateRequired, '飲食習慣 格式錯誤')
 
-  const industryDetailValid = industry !== 'other' || industryDetailValueValid
+  const isIndustryDetailValid = industryValue !== 'other' || industryDetailValid
   const sessionsValid = sessions.length > 0
   const dinnerValid = dinnerOptions.some((option) => option.value === dinner)
-  const foodPreferenceDetailValid = foodPreference !== 'other' || foodPreferenceDetailValueValid
+  const isFoodPreferenceDetailValid = foodPreferenceValue !== 'other' || foodPreferenceDetailValid
 
   const isFormValid = [
     nameValid,
@@ -75,11 +92,11 @@ export default function Home() {
     phoneValid,
     organizationValid,
     industryValid,
-    industryDetailValid,
+    isIndustryDetailValid,
     sessionsValid,
     dinnerValid,
     foodPreferenceValid,
-    foodPreferenceDetailValid,
+    isFoodPreferenceDetailValid,
   ].every(Boolean)
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -89,16 +106,16 @@ export default function Home() {
     }
 
     const payload = {
-      name,
-      email,
-      phone,
-      organization,
-      industry,
-      industryDetail,
+      name: nameValue,
+      email: emailValue,
+      phone: phoneValue,
+      organization: organizationValue,
+      industry: industryValue,
+      industryDetail: industryDetailValue,
       sessions,
       dinner,
-      foodPreference,
-      foodPreferenceDetail,
+      foodPreference: foodPreferenceValue,
+      foodPreferenceDetail: foodPreferenceDetailValue,
     }
 
     alert(`已送出報名資訊：${JSON.stringify(payload, null, 2)}`)
@@ -124,8 +141,8 @@ export default function Home() {
               label="姓名"
               required
               autoComplete="name"
-              value={name}
-              onChange={setName}
+              value={nameValue}
+              onChange={setNameValue}
               error={nameError}
             />
 
@@ -135,8 +152,8 @@ export default function Home() {
               label="常用信箱"
               required
               autoComplete="email"
-              value={email}
-              onChange={setEmail}
+              value={emailValue}
+              onChange={setEmailValue}
               error={emailError}
             />
 
@@ -146,8 +163,8 @@ export default function Home() {
               label="手機號碼"
               required
               autoComplete="tel"
-              value={phone}
-              onChange={setPhone}
+              value={phoneValue}
+              onChange={setPhoneValue}
               error={phoneError}
             />
 
@@ -156,8 +173,8 @@ export default function Home() {
               label="服務單位"
               required
               autoComplete="organization"
-              value={organization}
-              onChange={setOrganization}
+              value={organizationValue}
+              onChange={setOrganizationValue}
               error={organizationError}
             />
 
@@ -166,10 +183,10 @@ export default function Home() {
               label="工作產業類別"
               required
               options={industryOptions}
-              value={industry}
-              onChange={setIndustry}
-              detailValue={industryDetail}
-              onDetailChange={setIndustryDetail}
+              value={industryValue}
+              onChange={setIndustryValue}
+              detailValue={industryDetailValue}
+              onDetailChange={setIndustryDetailValue}
               error={industryError || industryDetailError}
             />
 
@@ -197,10 +214,10 @@ export default function Home() {
               name="food-preference"
               label="飲食習慣"
               options={foodPreferenceOptions}
-              value={foodPreference}
-              onChange={setFoodPreference}
-              detailValue={foodPreferenceDetail}
-              onDetailChange={setFoodPreferenceDetail}
+              value={foodPreferenceValue}
+              onChange={setFoodPreferenceValue}
+              detailValue={foodPreferenceDetailValue}
+              onDetailChange={setFoodPreferenceDetailValue}
               required
               error={foodPreferenceError || foodPreferenceDetailError}
             />
