@@ -56,8 +56,8 @@ const BaseSelect: React.FC<{
   }, [])
 
   const shouldShowError = showInput
-    ? (detailValue?.trim().length ?? 0) > 0 && (invalid || Boolean(error))
-    : selectedLabel.trim().length > 0 && (invalid || Boolean(error))
+    ? (detailValue?.trim().length ?? 0) > 0 && Boolean(invalid)
+    : selectedLabel.trim().length > 0 && Boolean(invalid)
 
   return (
     <div ref={rootRef} className={`relative ${className ?? ''}`}>
@@ -83,7 +83,7 @@ const BaseSelect: React.FC<{
       />
 
       {isOpen && (
-        <div className="relative left-0 bottom-8 z-20 mt-1.5 w-full rounded-[var(--rounded)] bg-white p-2 shadow-[1px_1px_7px_#ccc]">
+        <div className="absolute left-0 top-[88px] z-20 mt-1.5 w-full rounded-[var(--rounded)] bg-white p-2 shadow-[1px_1px_7px_#ccc]">
           {options.map((option) => {
             const isSelected = option.value === value
             return (

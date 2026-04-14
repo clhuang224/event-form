@@ -32,7 +32,7 @@ const BaseInput: React.FC<{
   inputClassName,
 }) => {
   const hasValue = (value?.trim().length ?? 0) > 0
-  const hasError = hasValue && (invalid || Boolean(error))
+  const hasError = hasValue && Boolean(invalid)
   const defaultInputClassName = `h-[var(--size-field-height)] w-full rounded-[var(--rounded)] border bg-[var(--color-input-bg)] px-4 text-[length:var(--text-field-size)] font-medium text-[#444] outline-none transition placeholder:text-[var(--color-field-hint)] ${
     hasError
       ? 'border-[var(--color-field-error)]'
