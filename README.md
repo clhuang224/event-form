@@ -1,87 +1,111 @@
-# Welcome to React Router!
+# 線上會議報名表
 
-A modern, production-ready template for building full-stack React applications using React Router.
+這是一個以 React Router 與 Tailwind CSS 建立的單頁報名表專案，主要用來實作線上會議報名流程。畫面以客製化表單元件為主，並搭配原生表單驗證與欄位格式驗證。
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## 如何使用
 
-## Features
+### 線上查看
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+直接開啟 [GitHub Pages](https://clhuang224.github.io/event-form/)。
 
-## Getting Started
-
-### Installation
-
-Install the dependencies:
+### 安裝套件
 
 ```bash
-npm install
+pnpm run install
 ```
 
-### Development
-
-Start the development server with HMR:
+### 啟動開發環境
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
+### 型別檢查
 
 ```bash
-npm run build
+pnpm run typecheck
 ```
 
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
+### 建置正式版本
 
 ```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
+pnpm run build
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+## 技術棧
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
+- React 19
+- React Router 7
+- TypeScript
+- Tailwind CSS 4
+- Vite
+- pnpm
 
-### DIY Deployment
+## 資料夾結構
 
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
+```text
+.
+├── app
+│   ├── assets                # 圖片、按鈕、checkbox / radio / arrow SVG
+│   ├── components            # 共用元件
+│   ├── constants             # 常數
+│   ├── enums                 # Enum 定義
+│   ├── hooks                 # 自訂 hooks
+│   ├── routes                # 路由頁面
+│   ├── utils                 # 驗證與資料轉換工具
+│   ├── app.css               # 全域樣式與 theme token
+│   ├── root.tsx              # App 入口
+│   └── routes.ts             # 路由設定
 ├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
+├── react-router.config.ts
+├── tsconfig.json
+└── vite.config.ts
 ```
 
-## Styling
+## 重要元件與 Hook
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+### 頁面
 
----
+- `app/routes/home.tsx`
+  - 專案的主要頁面。
+  - 組合所有表單欄位、管理表單狀態、處理送出邏輯與欄位間的連動關係。
+  - 目前包含「晚宴是否參加」與「飲食習慣」的條件式顯示，以及送出 payload 的欄位裁切。
 
-Built with ❤️ using React Router.
+### 共用元件
+
+- `app/components/BaseInput.tsx`
+  - 基礎文字輸入欄位。
+  - 統一處理 label、hint、error、focus 樣式與右側 adornment。
+
+- `app/components/BaseSelect.tsx`
+  - 以 `BaseInput` 為基底改寫的自訂下拉選單。
+  - 支援 readonly 顯示、右側箭頭、展開選單，以及選擇 `其他` 時顯示補充輸入欄位。
+
+- `app/components/BaseCheckbox.tsx`
+  - 多選欄位元件。
+  - 用於會議場次選擇，並額外補上「至少選一個」的原生驗證提示。
+
+- `app/components/BaseRadio.tsx`
+  - 單選欄位元件。
+  - 支援一般 radio 群組，以及選擇 `其他` 時出現補充輸入欄位。
+
+- `app/components/BaseField.tsx`
+  - 表單欄位的共用包裝層。
+  - 負責 label、required 標記、錯誤訊息顯示等欄位外框結構。
+
+- `app/components/SubmitButton.tsx`
+  - 送出按鈕元件。
+  - 使用圖片切換 hover / active 視覺效果。
+
+### Hook
+
+- `app/hooks/useFormField.ts`
+  - 用來管理單一欄位的 value、setter 與 error。
+  - 支援用 `id` 自動組合回傳欄位名稱，例如 `nameValue`、`setNameValue`、`nameError`。
+  - 若傳入 `hasOther`，會額外回傳 `${id}DetailValue` 與對應 setter，方便處理 `其他` 補充欄位。
+
+## 其他補充
+
+- 樣式以 Tailwind class 為主，顏色與尺寸 token 統一放在 `app/app.css`。
+- 欄位格式驗證集中在 `app/utils/validator.ts`。
+- 選項資料透過 `enums`、`constants`、`getEnumValues`、`getOptionsWithOther` 組合，避免資料散落在頁面內。
