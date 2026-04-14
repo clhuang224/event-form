@@ -50,14 +50,14 @@ export default function Home() {
     'tech',
     (value) => industryOptions.some((option) => option.value === value)
   )
-  const [industryDetail, setIndustryDetail, industryDetailValueValid] = useFormField<string>('', validateRequired)
+  const [industryDetail, setIndustryDetail, industryDetailValueValid] = useFormField<string>('tech', validateRequired)
 
-  const [sessions, setSessions] = useState<string[]>(['session-a'])
+  const [sessions, setSessions] = useState<string[]>([])
 
-  const [dinner, setDinner] = useState('no')
+  const [dinner, setDinner] = useState('yes')
 
   const [foodPreference, setFoodPreference, foodPreferenceValid] = useFormField<string>(
-    'other',
+    'omnivore',
     (value) => foodPreferenceOptions.some((option) => option.value === value)
   )
   const [foodPreferenceDetail, setFoodPreferenceDetail, foodPreferenceDetailValueValid] = useFormField<string>('', validateRequired)
