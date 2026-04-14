@@ -1,15 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
+  --font-sans: "PingFang TC", "PingFangTC-Regular", "Noto Sans TC", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-}
-
-html,
-body {
-  @apply bg-white dark:bg-gray-950;
-
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
+  --breakpoint-*: initial;
+  --breakpoint-desktop: 576px;
+  --color-page-bg: #F9EAF3;
+  --color-primary: #9C0053;
+  --color-input-bg: #F4F4F4;
+  --color-input-border: #DDDDDD;
+  --color-input-focus: #BA829D;
+  --color-field-error: #FA2728;
+  --color-field-hint: #b9b9b9;
+  --color-choice-border: #E1E1E1;
+  --color-choice-focus: #ECD7E2;
+  --size-field-height: 47px;
+  --text-field-size: 14px;
+  --text-label-size: 16px;
+  --font-field-weight: 500;
+  --rounded: 8px;
 }
