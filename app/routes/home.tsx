@@ -8,7 +8,7 @@ import footerImage from '~/assets/footer.png'
 import headerImage from '~/assets/header.png'
 import type { Route } from './+types/home'
 import { useFormField } from '~/hooks/useFormField'
-import { validateEmail, validateName, validatePhone, validateRequired } from '~/utils/validator'
+import { validateEmail, validateName, validateOrganization, validatePhone, validateRequired } from '~/utils/validator'
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: '線上會議報名表' }]
@@ -44,7 +44,7 @@ export default function Home() {
   const [name, setName, nameValid] = useFormField<string>('', validateName)
   const [email, setEmail, emailValid] = useFormField<string>('', validateEmail)
   const [phone, setPhone, phoneValid] = useFormField<string>('', validatePhone)
-  const [organization, setOrganization, organizationValid] = useFormField<string>('', validateRequired)
+  const [organization, setOrganization, organizationValid] = useFormField<string>('', validateOrganization)
 
   const [industry, setIndustry, industryValid] = useFormField<string>(
     'tech',
