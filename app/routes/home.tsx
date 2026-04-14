@@ -49,15 +49,14 @@ const foodPreferenceOptions = getOptionsWithOther(
 )
 
 export default function Home() {
-  const { nameValue, setNameValue, nameValid, nameError } = useFormField<'name', string>('name', '', validateName, '姓名 格式錯誤')
-  const { emailValue, setEmailValue, emailValid, emailError } = useFormField<'email', string>('email', '', validateEmail, '常用信箱 格式錯誤')
-  const { phoneValue, setPhoneValue, phoneValid, phoneError } = useFormField<'phone', string>('phone', '', validatePhone, '手機號碼 格式錯誤')
-  const { organizationValue, setOrganizationValue, organizationValid, organizationError } = useFormField<'organization', string>('organization', '', validateOrganization, '服務單位 格式錯誤')
+  const { nameValue, setNameValue, nameError } = useFormField<'name', string>('name', '', validateName, '姓名 格式錯誤')
+  const { emailValue, setEmailValue, emailError } = useFormField<'email', string>('email', '', validateEmail, '常用信箱 格式錯誤')
+  const { phoneValue, setPhoneValue, phoneError } = useFormField<'phone', string>('phone', '', validatePhone, '手機號碼 格式錯誤')
+  const { organizationValue, setOrganizationValue, organizationError } = useFormField<'organization', string>('organization', '', validateOrganization, '服務單位 格式錯誤')
 
   const {
     industryValue,
     setIndustryValue,
-    industryValid,
     industryError,
     industryDetailValue,
     setIndustryDetailValue,
@@ -76,7 +75,6 @@ export default function Home() {
   const {
     foodPreferenceValue,
     setFoodPreferenceValue,
-    foodPreferenceValid,
     foodPreferenceError,
     foodPreferenceDetailValue,
     setFoodPreferenceDetailValue,
@@ -96,15 +94,15 @@ export default function Home() {
     foodPreferenceValue !== 'other' || foodPreferenceDetailValue.trim().length > 0
 
   const isFormValid = [
-    nameValid,
-    emailValid,
-    phoneValid,
-    organizationValid,
-    industryValid,
+    !nameError,
+    !emailError,
+    !phoneError,
+    !organizationError,
+    !industryError,
     isIndustryDetailValid,
     sessionsValid,
     dinnerValid,
-    foodPreferenceValid,
+    !foodPreferenceError,
     isFoodPreferenceDetailValid,
   ].every(Boolean)
 

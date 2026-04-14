@@ -17,8 +17,6 @@ type UseFormFieldResult<Id extends string, T> = {
 } & {
   [K in `set${Capitalize<Id>}Value`]: (value: T) => void
 } & {
-  [K in `${Id}Valid`]: boolean
-} & {
   [K in `${Id}Error`]: string
 }
 
@@ -39,9 +37,9 @@ export const useFormField = <Id extends string, T, HasOther extends boolean = fa
   const [value, setValue] = useState(initialValue)
   const [detailValue, setDetailValue] = useState('')
 
-  const valid = validator?.(value) ?? false
+  const isValid = validator?.(value) ?? false
   const hasValue = getHasValue(value)
-  const error = hasValue && !valid ? errorMessage : ''
+  const error = hasValue && !isValid ? errorMessage : ''
   const setterKey = `set${capitalize(id)}Value` as `set${Capitalize<Id>}Value`
   const detailSetterKey = `set${capitalize(id)}DetailValue` as `set${Capitalize<Id>}DetailValue`
   const setFieldValue = (nextValue: T) => {
@@ -54,7 +52,6 @@ export const useFormField = <Id extends string, T, HasOther extends boolean = fa
   return {
     [`${id}Value`]: value,
     [setterKey]: setFieldValue,
-    [`${id}Valid`]: valid,
     [`${id}Error`]: error,
     ...(hasOther
       ? {
