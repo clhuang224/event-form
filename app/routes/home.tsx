@@ -7,6 +7,8 @@ import SubmitButton from '~/components/SubmitButton'
 import footerImage from '~/assets/footer.png'
 import headerImage from '~/assets/header.png'
 import type { Route } from './+types/home'
+import { useFormField } from '~/hooks/useFormField'
+import { validateEmail, validateName, validatePhone } from '~/utils/validator'
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: '線上會議報名表' }]
@@ -39,19 +41,19 @@ const foodPreferenceOptions = [
 ]
 
 export default function Home() {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  const [organization, setOrganization] = useState('')
+  const [name, setName, nameInvalid] = useFormField<string>('', validateName)
+  const [email, setEmail, emailInvalid] = useFormField<string>('', validateEmail)
+  const [phone, setPhone, phoneInvalid] = useFormField<string>('', validatePhone)
+  const [organization, setOrganization] = useFormField<string>('')
 
-  const [industry, setIndustry] = useState('tech')
-  const [industryDetail, setIndustryDetail] = useState('')
+  const [industry, setIndustry] = useFormField('tech')
+  const [industryDetail, setIndustryDetail] = useState<string>('')
 
   const [sessions, setSessions] = useState<string[]>(['session-a'])
 
   const [dinner, setDinner] = useState('no')
 
-  const [foodPreference, setFoodPreference] = useState('other')
+  const [foodPreference, setFoodPreference] = useFormField('other')
   const [foodPreferenceDetail, setFoodPreferenceDetail] = useState('')
 
   function handleSubmit() {
@@ -93,6 +95,7 @@ export default function Home() {
               autoComplete="name"
               value={name}
               onChange={setName}
+              invalid={nameInvalid}
             />
 
             <BaseInput
@@ -103,6 +106,7 @@ export default function Home() {
               autoComplete="email"
               value={email}
               onChange={setEmail}
+              invalid={emailInvalid}
             />
 
             <BaseInput
@@ -113,6 +117,7 @@ export default function Home() {
               autoComplete="tel"
               value={phone}
               onChange={setPhone}
+              invalid={phoneInvalid}
             />
 
             <BaseInput
