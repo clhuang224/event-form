@@ -41,26 +41,28 @@ const foodPreferenceOptions = [
 ]
 
 export default function Home() {
-  const [name, setName, nameValid] = useFormField<string>('', validateName)
-  const [email, setEmail, emailValid] = useFormField<string>('', validateEmail)
-  const [phone, setPhone, phoneValid] = useFormField<string>('', validatePhone)
-  const [organization, setOrganization, organizationValid] = useFormField<string>('', validateOrganization)
+  const [name, setName, nameValid, nameError] = useFormField<string>('', validateName, '姓名 格式錯誤')
+  const [email, setEmail, emailValid, emailError] = useFormField<string>('', validateEmail, '常用信箱 格式錯誤')
+  const [phone, setPhone, phoneValid, phoneError] = useFormField<string>('', validatePhone, '手機號碼 格式錯誤')
+  const [organization, setOrganization, organizationValid, organizationError] = useFormField<string>('', validateOrganization, '服務單位 格式錯誤')
 
-  const [industry, setIndustry, industryValid] = useFormField<string>(
+  const [industry, setIndustry, industryValid, industryError] = useFormField<string>(
     'tech',
-    (value) => industryOptions.some((option) => option.value === value)
+    (value) => industryOptions.some((option) => option.value === value),
+    '工作產業類別 格式錯誤'
   )
-  const [industryDetail, setIndustryDetail, industryDetailValueValid] = useFormField<string>('tech', validateRequired)
+  const [industryDetail, setIndustryDetail, industryDetailValueValid, industryDetailError] = useFormField<string>('', validateRequired, '工作產業類別 格式錯誤')
 
   const [sessions, setSessions] = useState<string[]>([])
 
   const [dinner, setDinner] = useState('yes')
 
-  const [foodPreference, setFoodPreference, foodPreferenceValid] = useFormField<string>(
+  const [foodPreference, setFoodPreference, foodPreferenceValid, foodPreferenceError] = useFormField<string>(
     'omnivore',
-    (value) => foodPreferenceOptions.some((option) => option.value === value)
+    (value) => foodPreferenceOptions.some((option) => option.value === value),
+    '飲食習慣 格式錯誤'
   )
-  const [foodPreferenceDetail, setFoodPreferenceDetail, foodPreferenceDetailValueValid] = useFormField<string>('', validateRequired)
+  const [foodPreferenceDetail, setFoodPreferenceDetail, foodPreferenceDetailValueValid, foodPreferenceDetailError] = useFormField<string>('', validateRequired, '飲食習慣 格式錯誤')
 
   const industryDetailValid = industry !== 'other' || industryDetailValueValid
   const sessionsValid = sessions.length > 0
@@ -124,8 +126,8 @@ export default function Home() {
               autoComplete="name"
               value={name}
               onChange={setName}
-              invalid={!nameValid}
-              error="姓名 格式錯誤"
+              invalid={Boolean(nameError)}
+              error={nameError}
             />
 
             <BaseInput
@@ -136,8 +138,8 @@ export default function Home() {
               autoComplete="email"
               value={email}
               onChange={setEmail}
-              invalid={!emailValid}
-              error="常用信箱 格式錯誤"
+              invalid={Boolean(emailError)}
+              error={emailError}
             />
 
             <BaseInput
@@ -148,8 +150,8 @@ export default function Home() {
               autoComplete="tel"
               value={phone}
               onChange={setPhone}
-              invalid={!phoneValid}
-              error="手機號碼 格式錯誤"
+              invalid={Boolean(phoneError)}
+              error={phoneError}
             />
 
             <BaseInput
@@ -159,8 +161,8 @@ export default function Home() {
               autoComplete="organization"
               value={organization}
               onChange={setOrganization}
-              invalid={!organizationValid}
-              error="服務單位 格式錯誤"
+              invalid={Boolean(organizationError)}
+              error={organizationError}
             />
 
             <BaseSelect
@@ -172,8 +174,8 @@ export default function Home() {
               onChange={setIndustry}
               detailValue={industryDetail}
               onDetailChange={setIndustryDetail}
-              invalid={!industryValid || !industryDetailValid}
-              error="工作產業類別 格式錯誤"
+              invalid={Boolean(industryError || industryDetailError)}
+              error={industryError || industryDetailError}
             />
 
             <BaseCheckbox
@@ -205,7 +207,7 @@ export default function Home() {
               detailValue={foodPreferenceDetail}
               onDetailChange={setFoodPreferenceDetail}
               required
-              error={!foodPreferenceValid || !foodPreferenceDetailValid ? '飲食習慣 格式錯誤' : undefined}
+              error={foodPreferenceError || foodPreferenceDetailError}
             />
           </div>
 
