@@ -16,9 +16,9 @@ const BaseField = ({
 }: React.PropsWithChildren<BaseFieldProps>) => {
   return (
     <fieldset className={className}>
-      <legend className="mb-4 text-[var(--text-label-size)] font-medium text-[var(--color-primary)]">
+      <legend className="mb-4 text-[length:var(--text-label-size)] font-medium text-[var(--color-primary)]">
         {label}
-        {required && (<span className="ml-1 text-[var(--color-primary)]">*</span>)}
+        {required && (<span className="ml-1 text-[color:var(--color-primary)]">*</span>)}
       </legend>
       {children}
       {error && (

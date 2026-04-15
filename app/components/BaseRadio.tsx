@@ -76,7 +76,7 @@ const BaseRadio: React.FC<{
           placeholder={inputPlaceholder}
           value={detailValue}
           onChange={(e) => onDetailChange?.(e.target.value)}
-          className="mt-4 h-[var(--size-field-height)] w-full rounded-[var(--rounded)] border border-[var(--color-input-border)] bg-[var(--color-input-bg)] px-4 text-[var(--text-field-size)] font-medium text-[var(--color-input-text)] outline-none transition placeholder:text-[var(--color-field-hint)] hover:border-[var(--color-input-focus)] focus:border-[var(--color-input-focus)]"
+          className="mt-4 h-[var(--size-field-height)] w-full rounded-[var(--rounded)] border border-[var(--color-input-border)] bg-[var(--color-input-bg)] px-4 text-[length:var(--text-field-size)] font-medium text-[var(--color-input-text)] outline-none transition placeholder:text-[var(--color-field-hint)] hover:border-[var(--color-input-focus)] focus:border-[var(--color-input-focus)]"
         />
       ) : null}
     </BaseField>

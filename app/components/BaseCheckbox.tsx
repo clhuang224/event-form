@@ -37,7 +37,7 @@ const BaseCheckbox: React.FC<{
             <label
               key={option.value}
               htmlFor={optionId}
-              className="flex cursor-pointer items-center gap-3 text-[var(--text-field-size)] font-medium text-[#3e3e3e]"
+              className="flex cursor-pointer items-center gap-3 text-[length:var(--text-field-size)] font-medium text-[#3e3e3e]"
             >
               <input
                 id={optionId}

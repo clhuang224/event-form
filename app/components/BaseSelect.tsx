@@ -91,7 +91,7 @@ const BaseSelect: React.FC<{
                   onChange(option.value)
                   setIsOpen(false)
                 }}
-                className="block w-full rounded-[var(--rounded)] px-3 py-2 text-left text-[var(--text-field-size)] font-medium transition hover:bg-[var(--color-page-bg)] cursor-pointer"
+                className="block w-full rounded-[var(--rounded)] px-3 py-2 text-left text-[length:var(--text-field-size)] font-medium transition hover:bg-[var(--color-page-bg)] cursor-pointer"
               >
                 {option.label}
               </button>
@@ -107,7 +107,7 @@ const BaseSelect: React.FC<{
           placeholder={inputPlaceholder}
           value={detailValue}
           onChange={(e) => onDetailChange?.(e.target.value)}
-          className="mt-4 h-[var(--size-field-height)] w-full rounded-[var(--rounded)] border border-[var(--color-input-border)] bg-[var(--color-input-bg)] px-4 text-[var(--text-field-size)] font-medium text-[#3e3e3e] outline-none transition placeholder:text-[var(--color-field-hint)] hover:border-[var(--color-input-focus)] focus:border-[var(--color-input-focus)]"
+          className="mt-4 h-[var(--size-field-height)] w-full rounded-[var(--rounded)] border border-[var(--color-input-border)] bg-[var(--color-input-bg)] px-4 text-[length:var(--text-field-size)] font-medium text-[#3e3e3e] outline-none transition placeholder:text-[var(--color-field-hint)] hover:border-[var(--color-input-focus)] focus:border-[var(--color-input-focus)]"
         />
       )}
     </div>
