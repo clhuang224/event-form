@@ -40,6 +40,7 @@ const BaseInput: React.FC<{
   return (
     <BaseField
       className="space-y-0"
+      labelFor={id}
       label={label}
       required={required}
       hint={hint}
